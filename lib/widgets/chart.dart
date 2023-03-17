@@ -34,20 +34,22 @@ class Chart extends StatelessWidget {
     );
   }
 
+  double get _totalSum {
+    return _groupedTransactionsValues.fold(
+      0.0,
+      (sum, element) {
+        return sum + (element["sum"] as double);
+      },
+    );
+  }
+
   List<Widget> _createBars() {
     List<Widget> bars = [];
-    var totalSum;
-
-    for (var tx in _transactionList) {
-      totalSum += tx.amount;
-    }
 
     for (var tx in _groupedTransactionsValues) {
       bars.add(
-        ChartBar(
-            tx["day"].toString(),
-            (double.parse(tx["sum"].toString()) / totalSum * 100),
-            double.parse(tx["sum"].toString())),
+        ChartBar(tx["day"].toString(), tx["sum"] as double,
+            _totalSum == 0.0 ? 0.0 : (tx["sum"] as double) / _totalSum),
       );
     }
 
