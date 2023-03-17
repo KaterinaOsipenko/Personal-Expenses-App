@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:vertical_percent_indicator/vertical_percent_indicator.dart';
 
 class ChartBar extends StatelessWidget {
   final double _perCentOfTotal;
@@ -13,43 +16,32 @@ class ChartBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('${_totalSum.toStringAsFixed(0)}\$'),
+        FittedBox(
+          child: Text("\$$_totalSum"),
+        ),
         const SizedBox(
           height: 4,
         ),
         Container(
+          height: 60,
           decoration: BoxDecoration(
             border: Border.all(width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: LinearPercentIndicator(
-            width: 140.0,
-            lineHeight: 14.0,
-            percent: _perCentOfTotal,
-            backgroundColor: Colors.grey,
-            progressColor: Colors.blue,
+          width: 15,
+          child: Stack(
+            children: [
+              FractionallySizedBox(
+                heightFactor: _perCentOfTotal,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        // Container(
-        //   height: 60,
-        //   decoration: BoxDecoration(
-        //     border: Border.all(width: 1),
-        //     borderRadius: BorderRadius.circular(10),
-        //   ),
-        //   width: 15,
-        //   child: Stack(
-        //     children: [
-        //       FractionallySizedBox(
-        //         heightFactor: _perCentOfTotal,
-        //         child: Container(
-        //           decoration: BoxDecoration(
-        //             color: Theme.of(context).colorScheme.secondary,
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         const SizedBox(
           height: 4,
         ),

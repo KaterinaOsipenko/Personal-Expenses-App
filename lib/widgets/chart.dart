@@ -1,10 +1,8 @@
-import 'dart:ffi';
-
-import 'package:expence_planner_app/widgets/chart_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:expence_planner_app/models/transaction.dart';
-import 'package:flutter/material.dart';
+import '../models/transaction.dart';
+import './chart_bar.dart';
 
 class Chart extends StatelessWidget {
   final List<Transaction> _transactionList;
@@ -48,11 +46,13 @@ class Chart extends StatelessWidget {
 
     for (var tx in _groupedTransactionsValues) {
       bars.add(
-        ChartBar(tx["day"].toString(), tx["sum"] as double,
-            _totalSum == 0.0 ? 0.0 : (tx["sum"] as double) / _totalSum),
+        Flexible(
+          fit: FlexFit.tight,
+          child: ChartBar(tx["day"].toString(), (tx["sum"] as double),
+              _totalSum == 0.0 ? 0.0 : (tx["sum"] as double) / _totalSum),
+        ),
       );
     }
-
     return bars;
   }
 
@@ -61,9 +61,12 @@ class Chart extends StatelessWidget {
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _createBars(),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _createBars(),
+        ),
       ),
     );
   }
