@@ -3,6 +3,7 @@ import 'package:expence_planner_app/widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
 
 import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
 import './models/transaction.dart';
 
 void main() => runApp(const MyApp());
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         fontFamily: 'Quicksand',
+        shadowColor: Colors.black,
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -35,7 +37,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
         dialogTheme: const DialogTheme(
-          shadowColor: Colors.black,
           elevation: 5,
         ),
         colorScheme: ColorScheme.fromSwatch(
@@ -57,20 +58,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactionsList = [
-    // Transaction(
-    //   id: 'vf',
-    //   title: 'Shoes',
-    //   amount: 99.90,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 'df',
-    //   title: 'Food',
-    //   amount: 25.00,
-    //   date: DateTime.now(),
-    // )
-  ];
+  final List<Transaction> _transactionsList = [];
 
   void _addNewTransaction(String titleTx, double amountTx) {
     final tx = Transaction(
@@ -83,6 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactionsList.add(tx);
     });
+  }
+
+  List<Transaction> get _recentTransactions {
+    return _transactionsList.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 7),
+        ),
+      );
+    }).toList();
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -99,17 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
-    // showModalBottomSheet(
-    //   context: ctx,
-
-    //   builder: (_) {
-    //     return GestureDetector(
-    //       onTap: () {},
-    //       behavior: HitTestBehavior.opaque,
-    //       child: NewTransaction(_addNewTransaction),
-    //     );
-    //   },
-    // );
   }
 
   @override
@@ -128,13 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: const Card(
-                elevation: 10,
-                child: Text('CHART'),
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_transactionsList),
           ],
         ),
