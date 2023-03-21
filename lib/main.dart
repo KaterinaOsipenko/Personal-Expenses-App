@@ -83,13 +83,19 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
+  void _removeTransaction(String id) {
+    setState(() {
+      _transactionsList.removeWhere((element) => element.id == id);
+    });
+  }
+
   void _startAddNewTransaction(BuildContext ctx) {
     showDialog(
       context: context,
       builder: (_) {
         return SimpleDialog(
           titlePadding: const EdgeInsets.all(15),
-          contentPadding: const EdgeInsets.all(10),
+          contentPadding: const EdgeInsets.all(20),
           title: const Text("Add new Transaction"),
           children: [
             NewTransaction(_addNewTransaction),
@@ -116,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_transactionsList),
+            TransactionList(_transactionsList, _removeTransaction),
           ],
         ),
       ),

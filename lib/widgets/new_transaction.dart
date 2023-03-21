@@ -68,6 +68,18 @@ class _NewTransactionState extends State<NewTransaction> {
               ),
             ),
           ),
+          Row(
+            children: [
+              Text('No date chosen'),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "Choose Date",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
           FilledButton.tonal(
             style: ButtonStyle(
               shadowColor: MaterialStateProperty.all(Colors.black12),

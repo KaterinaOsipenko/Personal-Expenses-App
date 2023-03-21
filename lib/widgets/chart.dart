@@ -29,7 +29,7 @@ class Chart extends StatelessWidget {
           "sum": totalSum
         };
       },
-    );
+    ).reversed.toList();
   }
 
   double get _totalSum {
@@ -46,8 +46,7 @@ class Chart extends StatelessWidget {
 
     for (var tx in _groupedTransactionsValues) {
       bars.add(
-        Flexible(
-          fit: FlexFit.tight,
+        Expanded(
           child: ChartBar(tx["day"].toString(), (tx["sum"] as double),
               _totalSum == 0.0 ? 0.0 : (tx["sum"] as double) / _totalSum),
         ),

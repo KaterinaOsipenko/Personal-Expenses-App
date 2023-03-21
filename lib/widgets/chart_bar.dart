@@ -16,8 +16,11 @@ class ChartBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FittedBox(
-          child: Text("\$$_totalSum"),
+        Container(
+          height: 20,
+          child: FittedBox(
+            child: Text("\$$_totalSum"),
+          ),
         ),
         const SizedBox(
           height: 4,
@@ -32,10 +35,13 @@ class ChartBar extends StatelessWidget {
           child: Stack(
             children: [
               FractionallySizedBox(
+                alignment: Alignment.bottomCenter,
                 heightFactor: _perCentOfTotal,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiary,
+                    border: Border.all(width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
