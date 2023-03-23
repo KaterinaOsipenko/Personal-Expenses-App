@@ -1,8 +1,8 @@
-import 'package:expence_planner_app/widgets/chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-
+import 'chart.dart';
+import 'edit_transaction.dart';
 import '/models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
@@ -10,17 +10,21 @@ class TransactionList extends StatelessWidget {
 
   final Function handlerRemove;
 
-  TransactionList(this.transactionsList, this.handlerRemove);
+  final Function handlerEdit;
 
-  _editTransaction(String id, BuildContext context) {
+  TransactionList(this.transactionsList, this.handlerRemove, this.handlerEdit);
+
+  _showEditTransaction(String id, BuildContext context) {
     showDialog(
       context: context,
       builder: (_) {
-        return const SimpleDialog(
-          title: Text("Edit Transaction"),
+        return SimpleDialog(
+          title: const Text("Edit Transaction"),
           titlePadding: EdgeInsets.all(15),
           contentPadding: EdgeInsets.all(10),
-          children: [],
+          children: [
+            EditTransaction(transactionsList, id, handlerEdit),
+          ],
         );
       },
     );
@@ -72,7 +76,6 @@ class TransactionList extends StatelessWidget {
                     ),
                     subtitle: Text(
                       DateFormat.MMMMEEEEd()
-                          .add_Hm()
                           .format(transactionsList[index].date),
                     ),
                     trailing: SizedBox(
@@ -90,7 +93,7 @@ class TransactionList extends StatelessWidget {
                           IconButton(
                             visualDensity: VisualDensity.compact,
                             color: Theme.of(context).colorScheme.secondary,
-                            onPressed: () => _editTransaction(
+                            onPressed: () => _showEditTransaction(
                                 transactionsList[index].id, context),
                             icon: const Icon(Icons.edit),
                           )

@@ -60,17 +60,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactionsList = [];
 
-  void _addNewTransaction(String titleTx, double amountTx) {
+  void _addNewTransaction(String titleTx, double amountTx, DateTime date) {
     final tx = Transaction(
-      id: DateTime.now().toString(),
-      title: titleTx,
-      amount: amountTx,
-      date: DateTime.now(),
+      DateTime.now().toString(),
+      titleTx,
+      amountTx,
+      date,
     );
 
     setState(() {
       _transactionsList.add(tx);
     });
+  }
+
+  void _editTransaction(
+      Transaction tx, String editedTitle, double editedAmount) {
+    setState(
+      () {
+        tx.amount = editedAmount;
+        tx.title = editedTitle;
+      },
+    );
   }
 
   List<Transaction> get _recentTransactions {
@@ -89,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _startAddNewTransaction(BuildContext ctx) {
+  void _startAddNewTransaction() {
     showDialog(
       context: context,
       builder: (_) {
@@ -111,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () => _startAddNewTransaction(context),
+            onPressed: () => _startAddNewTransaction(),
             icon: const Icon(Icons.add),
           ),
         ],
@@ -122,7 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_transactionsList, _removeTransaction),
+            TransactionList(
+                _transactionsList, _removeTransaction, _editTransaction),
           ],
         ),
       ),
@@ -130,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         elevation: 13,
         highlightElevation: 10,
-        onPressed: () => _startAddNewTransaction(context),
+        onPressed: () => _startAddNewTransaction(),
         child: const Icon(Icons.add),
       ),
     );

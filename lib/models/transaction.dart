@@ -1,13 +1,27 @@
 class Transaction {
-  final String id;
-  final String title;
-  final double amount;
-  final DateTime date;
+  final String _id;
+  String _title;
+  double _amount;
+  DateTime _date;
 
-  Transaction({
-    required this.id,
-    required this.title,
-    required this.amount,
-    required this.date,
-  });
+  get id => _id;
+
+  get title => _title;
+
+  set title(value) => _title = value;
+
+  get amount => _amount;
+
+  set amount(value) => _amount = value;
+
+  get date => _date;
+
+  set date(value) => _date = value;
+
+  Transaction(
+    this._id,
+    this._title,
+    this._amount,
+    this._date,
+  );
 }
