@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, sized_box_for_whitespace
+import 'dart:math';
+
 import 'package:expence_planner_app/widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
@@ -115,6 +118,18 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _refresh() {
+    setState(() {
+      _transactionsList.forEach(
+        (element) {
+          if (DateTime.now().difference(element.date).inDays >= 7) {
+            _transactionsList.remove(element);
+          }
+        },
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,6 +139,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => _startAddNewTransaction(),
             icon: const Icon(Icons.add),
           ),
+          IconButton(
+            onPressed: () => _refresh(),
+            icon: const Icon(Icons.refresh),
+          )
         ],
         title: const Text('Personal Expenses'),
       ),
