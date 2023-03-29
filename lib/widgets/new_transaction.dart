@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'adaptive_flat_button.dart';
+
 class NewTransaction extends StatefulWidget {
   final Function addTx;
 
@@ -93,13 +95,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     ? "No date chosen"
                     : 'Picked date: ${DateFormat.yMd().format(_selectedDate!)}',
               ),
-              TextButton(
-                onPressed: _showDatePicker,
-                child: const Text(
-                  "Choose Date",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )
+              AdaptiveFlatButton("Choose date", _showDatePicker),
             ],
           ),
           FilledButton.tonal(
