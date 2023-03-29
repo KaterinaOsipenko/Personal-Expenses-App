@@ -16,10 +16,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
+
     return MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
         textTheme: const TextTheme(
+          labelSmall: TextStyle(
+            fontSize: 8,
+          ),
           titleLarge: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 18,
@@ -62,6 +67,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactionsList = [];
+
+  bool _showChart = false;
 
   void _addNewTransaction(String titleTx, double amountTx, DateTime date) {
     final tx = Transaction(
@@ -132,27 +139,72 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(),
+          icon: const Icon(Icons.add),
+        ),
+        IconButton(
+          onPressed: () => _refresh(),
+          icon: const Icon(Icons.refresh),
+        )
+      ],
+      title: const Text('Personal Expenses'),
+    );
+
+    final _txListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.6,
+      child: TransactionList(
+          _transactionsList, _removeTransaction, _editTransaction),
+    );
+
+    final _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(),
-            icon: const Icon(Icons.add),
-          ),
-          IconButton(
-            onPressed: () => _refresh(),
-            icon: const Icon(Icons.refresh),
-          )
-        ],
-        title: const Text('Personal Expenses'),
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(
-                _transactionsList, _removeTransaction, _editTransaction),
+            if (_isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Show chart"),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!_isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.4,
+                child: Chart(_recentTransactions),
+              ),
+            if (!_isLandscape) _txListWidget,
+            if (_isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: Chart(_recentTransactions),
+                    )
+                  : _txListWidget,
           ],
         ),
       ),
