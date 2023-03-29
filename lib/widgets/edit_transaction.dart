@@ -8,16 +8,17 @@ class EditTransaction extends StatefulWidget {
   final String _id;
   final Function _handlerEdit;
 
-  EditTransaction(this._transactionsList, this._id, this._handlerEdit);
+  const EditTransaction(this._transactionsList, this._id, this._handlerEdit,
+      {super.key});
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
 }
 
 class _EditTransactionState extends State<EditTransaction> {
-  late final titleController;
+  late TextEditingController titleController;
 
-  late final amountController;
+  late TextEditingController amountController;
 
   @override
   void initState() {
@@ -72,65 +73,63 @@ class _EditTransactionState extends State<EditTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(
-              bottom: 10,
-            ),
-            child: TextField(
-              onSubmitted: (_) => submitData(),
-              controller: titleController,
-              decoration: InputDecoration(
-                label: Text(_transaction.title),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: TextField(
+            onSubmitted: (_) => submitData(),
+            controller: titleController,
+            decoration: InputDecoration(
+              label: Text(_transaction.title),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(
-              bottom: 10,
-            ),
-            child: TextField(
-              keyboardType: TextInputType.number,
-              controller: amountController,
-              onSubmitted: (_) => submitData(),
-              decoration: InputDecoration(
-                label: Text("${_transaction.amount}"),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            controller: amountController,
+            onSubmitted: (_) => submitData(),
+            decoration: InputDecoration(
+              label: Text("${_transaction.amount}"),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Date: ${DateFormat.yMd().format(_transaction.date)}",
-              ),
-              TextButton(
-                onPressed: _showDateEditor,
-                child: const Text("Edit Date"),
-              )
-            ],
-          ),
-          FilledButton.tonal(
-            style: ButtonStyle(
-              shadowColor: MaterialStateProperty.all(Colors.black12),
-              elevation: const MaterialStatePropertyAll(5),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Date: ${DateFormat.yMd().format(_transaction.date)}",
             ),
-            onPressed: submitData,
-            child: const Text('Edit'),
+            TextButton(
+              onPressed: _showDateEditor,
+              child: const Text("Edit Date"),
+            )
+          ],
+        ),
+        FilledButton.tonal(
+          style: ButtonStyle(
+            shadowColor: MaterialStateProperty.all(Colors.black12),
+            elevation: const MaterialStatePropertyAll(5),
           ),
-        ],
-      ),
+          onPressed: submitData,
+          child: const Text('Edit'),
+        ),
+      ],
     );
   }
 }
