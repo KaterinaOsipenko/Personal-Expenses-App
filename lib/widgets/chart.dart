@@ -7,7 +7,7 @@ import './chart_bar.dart';
 class Chart extends StatelessWidget {
   final List<Transaction> _transactionList;
 
-  Chart(this._transactionList);
+  const Chart(this._transactionList, {super.key});
 
   List<Map<String, Object>> get _groupedTransactionsValues {
     return List.generate(

@@ -1,10 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, sized_box_for_whitespace
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 
 import './widgets/transaction_list.dart';
@@ -56,12 +53,14 @@ class MyApp extends StatelessWidget {
           onPrimary: const Color(0xffffffff),
         ),
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -128,20 +127,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _refresh() {
     setState(() {
-      _transactionsList.forEach(
-        (element) {
-          if (DateTime.now().difference(element.date).inDays >= 7) {
-            _transactionsList.remove(element);
-          }
-        },
-      );
+      for (var element in _transactionsList) {
+        if (DateTime.now().difference(element.date).inDays >= 7) {
+          _transactionsList.remove(element);
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final _isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
     final PreferredSizeWidget appBar = Platform.isIOS
         ? CupertinoNavigationBar(
@@ -169,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Personal Expenses'),
           ) as PreferredSizeWidget;
 
-    final _txListWidget = Container(
+    final txListWidget = Container(
       height: (mediaQuery.size.height -
               appBar.preferredSize.height -
               mediaQuery.padding.top) *
@@ -183,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            if (_isLandscape)
+            if (isLandscape)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -198,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-            if (!_isLandscape)
+            if (!isLandscape)
               Container(
                 height: (mediaQuery.size.height -
                         appBar.preferredSize.height -
@@ -206,8 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     0.4,
                 child: Chart(_recentTransactions),
               ),
-            if (!_isLandscape) _txListWidget,
-            if (_isLandscape)
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
               _showChart
                   ? Container(
                       height: (mediaQuery.size.height -
@@ -216,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           0.7,
                       child: Chart(_recentTransactions),
                     )
-                  : _txListWidget,
+                  : txListWidget,
           ],
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
-import 'chart.dart';
 import 'edit_transaction.dart';
 import '/models/transaction.dart';
 
@@ -12,7 +11,9 @@ class TransactionList extends StatelessWidget {
 
   final Function handlerEdit;
 
-  TransactionList(this.transactionsList, this.handlerRemove, this.handlerEdit);
+  const TransactionList(
+      this.transactionsList, this.handlerRemove, this.handlerEdit,
+      {super.key});
 
   _showEditTransaction(String id, BuildContext context) {
     showDialog(
@@ -20,8 +21,8 @@ class TransactionList extends StatelessWidget {
       builder: (_) {
         return SimpleDialog(
           title: const Text("Edit Transaction"),
-          titlePadding: EdgeInsets.all(15),
-          contentPadding: EdgeInsets.all(10),
+          titlePadding: const EdgeInsets.all(15),
+          contentPadding: const EdgeInsets.all(10),
           children: [
             EditTransaction(transactionsList, id, handlerEdit),
           ],
