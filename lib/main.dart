@@ -3,13 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:device_preview/device_preview.dart';
 
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
 import './widgets/new_transaction.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+      const MyApp(), // Wrap your app
+    );
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,6 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       title: 'Personal Expenses',
       theme: ThemeData(
         textTheme: const TextTheme(
@@ -144,6 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ? CupertinoNavigationBar(
             middle: const Text('Personal Expenses'),
             trailing: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
                   child: const Icon(CupertinoIcons.add),
@@ -218,7 +224,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: appBar as ObstructingPreferredSizeWidget,
