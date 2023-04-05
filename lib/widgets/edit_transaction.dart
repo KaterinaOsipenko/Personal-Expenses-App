@@ -4,12 +4,13 @@ import 'package:intl/intl.dart';
 import '/models/transaction.dart';
 
 class EditTransaction extends StatefulWidget {
-  final List<Transaction> _transactionsList;
-  final String _id;
+  final Transaction _transaction;
+
+  Transaction get transaction => _transaction;
+
   final Function _handlerEdit;
 
-  const EditTransaction(this._transactionsList, this._id, this._handlerEdit,
-      {super.key});
+  const EditTransaction(this._transaction, this._handlerEdit, {super.key});
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -22,16 +23,10 @@ class _EditTransactionState extends State<EditTransaction> {
 
   @override
   void initState() {
-    titleController = TextEditingController(text: _transaction.title);
+    titleController = TextEditingController(text: widget.transaction.title);
     amountController =
-        TextEditingController(text: _transaction.amount.toString());
+        TextEditingController(text: widget._transaction.amount.toString());
     super.initState();
-  }
-
-  Transaction get _transaction {
-    Transaction transaction = widget._transactionsList
-        .firstWhere((element) => element.id == widget._id);
-    return transaction;
   }
 
   void submitData() {
@@ -39,16 +34,16 @@ class _EditTransactionState extends State<EditTransaction> {
     double editedAmount;
 
     editedTitle = titleController.text.isEmpty
-        ? _transaction.title
+        ? widget.transaction.title
         : titleController.text;
 
     editedAmount = double.parse(amountController.text).isNaN ||
             double.parse(amountController.text).isNegative ||
             amountController.text.isEmpty
-        ? _transaction.amount
+        ? widget.transaction.amount
         : double.parse(amountController.text);
 
-    widget._handlerEdit(_transaction, editedTitle, editedAmount);
+    widget._handlerEdit(widget.transaction, editedTitle, editedAmount);
 
     Navigator.of(context).pop();
   }
@@ -56,7 +51,7 @@ class _EditTransactionState extends State<EditTransaction> {
   void _showDateEditor() {
     showDatePicker(
       context: context,
-      initialDate: _transaction.date,
+      initialDate: widget.transaction.date,
       firstDate: DateTime(2019),
       lastDate: DateTime.now(),
     ).then(
@@ -65,7 +60,7 @@ class _EditTransactionState extends State<EditTransaction> {
           return;
         }
         setState(() {
-          _transaction.date = pickedDate;
+          widget.transaction.date = pickedDate;
         });
       },
     );
@@ -84,7 +79,7 @@ class _EditTransactionState extends State<EditTransaction> {
             onSubmitted: (_) => submitData(),
             controller: titleController,
             decoration: InputDecoration(
-              label: Text(_transaction.title),
+              label: Text(widget.transaction.title),
               floatingLabelBehavior: FloatingLabelBehavior.never,
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -101,7 +96,7 @@ class _EditTransactionState extends State<EditTransaction> {
             controller: amountController,
             onSubmitted: (_) => submitData(),
             decoration: InputDecoration(
-              label: Text("${_transaction.amount}"),
+              label: Text("${widget.transaction.amount}"),
               floatingLabelBehavior: FloatingLabelBehavior.never,
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -113,7 +108,7 @@ class _EditTransactionState extends State<EditTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Date: ${DateFormat.yMd().format(_transaction.date)}",
+              "Date: ${DateFormat.yMd().format(widget.transaction.date)}",
             ),
             TextButton(
               onPressed: _showDateEditor,

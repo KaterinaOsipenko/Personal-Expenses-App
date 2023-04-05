@@ -140,37 +140,74 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildPortaitView(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.4,
+        child: Chart(_recentTransactions),
+      ),
+      txListWidget,
+    ];
+  }
+
+  List<Widget> _buildLandscapeView(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions),
+            )
+          : txListWidget,
+    ];
+  }
+
+  Widget _buildIOSAppBar() {
+    return CupertinoNavigationBar(
+      middle: const Text('Personal Expenses'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            child: const Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return AppBar(
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(),
+          icon: const Icon(Icons.add),
+        ),
+        IconButton(
+          onPressed: () => _refresh(),
+          icon: const Icon(Icons.refresh),
+        )
+      ],
+      title: const Text('Personal Expenses'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
     final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: const Text('Personal Expenses'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  child: const Icon(CupertinoIcons.add),
-                  onTap: () => _startAddNewTransaction(),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            actions: [
-              IconButton(
-                onPressed: () => _startAddNewTransaction(),
-                icon: const Icon(Icons.add),
-              ),
-              IconButton(
-                onPressed: () => _refresh(),
-                icon: const Icon(Icons.refresh),
-              )
-            ],
-            title: const Text('Personal Expenses'),
-          ) as PreferredSizeWidget;
+        ? _buildIOSAppBar() as PreferredSizeWidget
+        : _buildAppBar() as PreferredSizeWidget;
 
     final txListWidget = Container(
       height: (mediaQuery.size.height -
@@ -202,24 +239,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             if (!isLandscape)
-              Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.4,
-                child: Chart(_recentTransactions),
-              ),
-            if (!isLandscape) txListWidget,
+              ..._buildPortaitView(mediaQuery, appBar, txListWidget),
             if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7,
-                      child: Chart(_recentTransactions),
-                    )
-                  : txListWidget,
+              ..._buildLandscapeView(mediaQuery, appBar, txListWidget)
           ],
         ),
       ),
